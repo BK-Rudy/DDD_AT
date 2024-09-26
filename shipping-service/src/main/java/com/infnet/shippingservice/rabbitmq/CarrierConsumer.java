@@ -17,7 +17,7 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class WarehouseConsumer {
+public class CarrierConsumer {
     private final DeliveryService deliveryService;
 
     @RabbitListener(queues = {"carrier"})

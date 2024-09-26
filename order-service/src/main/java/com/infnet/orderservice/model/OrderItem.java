@@ -16,7 +16,6 @@ import java.io.Serializable;
 @Builder
 @Table(name = "\"order_item\"")
 public class OrderItem implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
