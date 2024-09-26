@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: order
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/**
+        - id: shipping
+          uri: lb://SHIPPING-SERVICE
+          predicates:
+            - Path=/shipping/**
+        - id: warehouse
+          uri: lb://WAREHOUSE-SERVICE
+          predicates:
+            - Path=/warehouse/**
+  application:
+    name: gateway-service
+server:
+  port: 9999
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

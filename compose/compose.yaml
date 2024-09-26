@@ -1,0 +1,64 @@
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: RABBIT-SERVER
+    networks:
+      - pet_friends
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    command: rabbitmq-server
+  eureka:
+    image: bruno-rudy/eureka:latest
+    container_name: EUREKA-SERVER
+    ports:
+      - "8761:8761"
+    networks:
+      - pet_friends
+  order:
+    image: bruno-rudy/order:latest
+    ports:
+      - "8081:8081"
+    networks:
+      - pet_friends
+    depends_on:
+      - rabbit
+      - eureka
+  shipping:
+    image: bruno-rudy/shipping:latest
+    networks:
+      - pet_friends
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbit
+      - eureka
+  warehouse:
+    image: bruno-rudy/warehouse:latest
+    networks:
+      - pet_friends
+    ports:
+      - "8083:8083"
+    depends_on:
+      - rabbit
+      - eureka
+  gateway:
+    image: bruno-rudy/gateway:latest
+    networks:
+      - pet_friends
+    ports:
+      - "9999:9999"
+    depends_on:
+      - eureka
+      - order
+      - shipping
+      - warehouse
+networks:
+  pet_friends:
+    driver: bridge
